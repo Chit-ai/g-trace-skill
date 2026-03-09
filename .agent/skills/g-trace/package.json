@@ -1,0 +1,19 @@
+{
+  "name": "g-trace",
+  "version": "1.0.0",
+  "description": "Analyzes Antigravity logs to create interactive session replays and redaction reports.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test_regex.js",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "antigravity",
+    "log",
+    "analyzer",
+    "replay",
+    "extension"
+  ],
+  "author": "Antigravity Dev",
+  "license": "ISC"
+}

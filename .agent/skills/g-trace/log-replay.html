@@ -1,0 +1,291 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Replay Artifact - test-log</title>
+    <style>
+        :root {
+            --bg-color: #1e1e1e;
+            --text-color: #d4d4d4;
+            --secondary-bg: #2d2d2d;
+            --border-color: #404040;
+            --accent-color: #007acc;
+            --thinking-color: #b5cea8;
+            --tool-color: #ce9178;
+            --result-color: #4ec9b0;
+            --font-family: 'Consolas', 'Courier New', monospace;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+        .header {
+            background-color: var(--secondary-bg);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.5em;
+            color: var(--accent-color);
+        }
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            font-size: 0.9em;
+        }
+        .metadata-item span {
+            color: #808080;
+        }
+        .log-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .log-entry {
+            background-color: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .entry-header {
+            padding: 10px 15px;
+            background-color: rgba(0,0,0,0.2);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+        .entry-type-thinking { color: var(--thinking-color); }
+        .entry-type-tool_use { color: var(--tool-color); }
+        .entry-type-tool_result { color: var(--result-color); }
+        .entry-type-raw { color: #808080; }
+        
+        .entry-content {
+            padding: 15px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 0.9em;
+        }
+        
+        details {
+            padding: 10px 15px;
+        }
+        summary {
+            cursor: pointer;
+            color: var(--accent-color);
+            font-weight: bold;
+            outline: none;
+        }
+        summary:hover {
+            text-decoration: underline;
+        }
+        .raw-data {
+            background-color: #111;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow-x: auto;
+        }
+        .badge-redacted {
+            background-color: #d16969;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Antigravity Session Replay</h1>
+        <div class="metadata-grid">
+            <div class="metadata-item"><span>Session ID:</span> test-log</div>
+            <div class="metadata-item"><span>Executed At:</span> 9/3/2026, 5:43:38 pm</div>
+            <div class="metadata-item"><span>Events Parsed:</span> 7</div>
+            <div class="metadata-item"><span>Redaction:</span> <span style="color:#4ec9b0">Enabled</span></div>
+        </div>
+    </div>
+    <div class="log-container">
+
+        <div class="log-entry">
+            <div class="entry-header">
+                <span class="entry-type-thinking">THINKING </span>
+                <span style="color: #808080; font-size: 0.8em;">3:30:00 pm</span>
+            </div>
+            
+            <div class="entry-content">I need to list the files in the directory to find the configuration.</div>
+            
+            <details>
+                <summary>Raw JSON</summary>
+                <pre class="raw-data">{
+  "timestamp": "2026-03-09T10:00:00.000Z",
+  "type": "thought",
+  "thinking": "I need to list the files in the directory to find the configuration."
+}</pre>
+            </details>
+        </div>
+        
+
+        <div class="log-entry">
+            <div class="entry-header">
+                <span class="entry-type-tool_use">TOOL_USE </span>
+                <span style="color: #808080; font-size: 0.8em;">3:30:01 pm</span>
+            </div>
+            
+            <div class="entry-content">{
+  "name": "list_dir",
+  "args": {
+    "path": "/var/www/html"
+  }
+}</div>
+            
+            <details>
+                <summary>Raw JSON</summary>
+                <pre class="raw-data">{
+  "timestamp": "2026-03-09T10:00:01.000Z",
+  "type": "tool_use",
+  "tool_call": {
+    "name": "list_dir",
+    "args": {
+      "path": "/var/www/html"
+    }
+  }
+}</pre>
+            </details>
+        </div>
+        
+
+        <div class="log-entry">
+            <div class="entry-header">
+                <span class="entry-type-tool_result">TOOL_RESULT </span>
+                <span style="color: #808080; font-size: 0.8em;">3:30:02 pm</span>
+            </div>
+            
+            <details>
+                <summary>View Tool Output</summary>
+                <div class="entry-content">index.html
+config.json
+</div>
+            </details>
+            
+            <details>
+                <summary>Raw JSON</summary>
+                <pre class="raw-data">{
+  "timestamp": "2026-03-09T10:00:02.000Z",
+  "type": "tool_result",
+  "tool_output": "index.html\nconfig.json\n"
+}</pre>
+            </details>
+        </div>
+        
+
+        <div class="log-entry">
+            <div class="entry-header">
+                <span class="entry-type-thinking">THINKING </span>
+                <span style="color: #808080; font-size: 0.8em;">3:30:03 pm</span>
+            </div>
+            
+            <div class="entry-content">I will check the config.json for API keys.</div>
+            
+            <details>
+                <summary>Raw JSON</summary>
+                <pre class="raw-data">{
+  "timestamp": "2026-03-09T10:00:03.000Z",
+  "type": "thought",
+  "thinking": "I will check the config.json for API keys."
+}</pre>
+            </details>
+        </div>
+        
+
+        <div class="log-entry">
+            <div class="entry-header">
+                <span class="entry-type-tool_use">TOOL_USE </span>
+                <span style="color: #808080; font-size: 0.8em;">3:30:04 pm</span>
+            </div>
+            
+            <div class="entry-content">{
+  "name": "view_file",
+  "args": {
+    "path": "/var/www/html/config.json"
+  }
+}</div>
+            
+            <details>
+                <summary>Raw JSON</summary>
+                <pre class="raw-data">{
+  "timestamp": "2026-03-09T10:00:04.000Z",
+  "type": "tool_use",
+  "tool_call": {
+    "name": "view_file",
+    "args": {
+      "path": "/var/www/html/config.json"
+    }
+  }
+}</pre>
+            </details>
+        </div>
+        
+
+        <div class="log-entry">
+            <div class="entry-header">
+                <span class="entry-type-tool_result">TOOL_RESULT <span class="badge-redacted">REDACTED</span></span>
+                <span style="color: #808080; font-size: 0.8em;">3:30:05 pm</span>
+            </div>
+            
+            <details>
+                <summary>View Tool Output</summary>
+                <div class="entry-content">{
+  "api_key": "[REDACTED_SECRET]",
+  "auth_token": "[REDACTED_SECRET].eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+}</div>
+            </details>
+            
+            <details>
+                <summary>Raw JSON</summary>
+                <pre class="raw-data">{
+  "timestamp": "2026-03-09T10:00:05.000Z",
+  "type": "tool_result",
+  "tool_output": "{\n  \"api_key\": \"[REDACTED_SECRET]\",\n  \"auth_token\": \"[REDACTED_SECRET].eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\"\n}"
+}</pre>
+            </details>
+        </div>
+        
+
+        <div class="log-entry">
+            <div class="entry-header">
+                <span class="entry-type-thinking">THINKING <span class="badge-redacted">REDACTED</span></span>
+                <span style="color: #808080; font-size: 0.8em;">3:30:06 pm</span>
+            </div>
+            
+            <div class="entry-content">I found the secrets. The api_key is 'sk-abcdefghijklmnopqrstuvwxyz123456' and the JWT token is [REDACTED_JWT]</div>
+            
+            <details>
+                <summary>Raw JSON</summary>
+                <pre class="raw-data">{
+  "timestamp": "2026-03-09T10:00:06.000Z",
+  "type": "thought",
+  "content": "I found the secrets. The api_key is 'sk-abcdefghijklmnopqrstuvwxyz123456' and the JWT token is [REDACTED_JWT]"
+}</pre>
+            </details>
+        </div>
+        
+    </div>
+</body>
+</html>

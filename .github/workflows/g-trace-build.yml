@@ -1,0 +1,69 @@
+name: G-Trace Build and Publish
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.agent/skills/g-trace/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.agent/skills/g-trace/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .agent/skills/g-trace
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: '.agent/skills/g-trace/package.json'
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Run Regex Mock Test
+      run: node test_regex.js
+
+    - name: Test Parser Execution
+      run: node index.js --path test-log.jsonl --redact --out log-replay.html
+
+    - name: Upload HTML Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: log-replay-test
+        path: .agent/skills/g-trace/log-replay.html
+        retention-days: 7
+
+  publish-extension:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Publish Antigravity Extension
+      # NOTE: Simulated publishing command; typically requires an API key in secrets
+      run: |
+        echo "Building G-Trace extension package..."
+        cd .agent/skills/g-trace
+        npm pack
+        echo "Successfully created package for Antigravity Marketplace."
+        # npm run publish --token ${{ secrets.ANTIGRAVITY_TOKEN }}
